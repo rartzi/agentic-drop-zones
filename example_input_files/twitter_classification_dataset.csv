@@ -1,0 +1,101 @@
+tweet_id,username,text,created_at,retweets,likes,replies,hashtags,sentiment,category
+1001,tech_enthusiast,"Just tried the new AI assistant and it's amazing! Revolutionary technology at work #AI #tech",2024-03-15T10:30:00Z,45,234,12,"#AI #tech",positive,technology
+1002,sports_fan,"Can't believe my team lost again. This season is a disaster #disappointed #sports",2024-03-15T11:15:00Z,8,67,23,"#disappointed #sports",negative,sports
+1003,foodie_lover,"Perfect morning with fresh coffee and croissants at my favorite cafe ☕",2024-03-15T08:45:00Z,12,156,5,,positive,lifestyle
+1004,news_reader,"Breaking: New climate policy announced by government officials today",2024-03-15T14:20:00Z,89,445,67,,neutral,politics
+1005,movie_buff,"Just watched the latest blockbuster. Average plot but great special effects #movies",2024-03-15T21:30:00Z,23,187,34,"#movies",neutral,entertainment
+1006,travel_explorer,"Missing those sunset views from my vacation in Bali. Can't wait to go back! #travel #bali",2024-03-15T16:45:00Z,34,289,18,"#travel #bali",positive,travel
+1007,student_life,"Finals week is killing me. Too much stress and not enough sleep #studentlife #stress",2024-03-15T02:15:00Z,156,892,78,"#studentlife #stress",negative,education
+1008,fitness_guru,"Completed my first marathon today! 26.2 miles of pure determination #marathon #fitness",2024-03-15T17:30:00Z,67,534,89,"#marathon #fitness",positive,sports
+1009,music_lover,"The concert last night was absolutely incredible. Best performance I've ever seen #music",2024-03-15T09:20:00Z,45,312,45,"#music",positive,entertainment
+1010,business_news,"Stock markets showing mixed signals today. Investors remain cautious #stocks #finance",2024-03-15T13:45:00Z,78,234,56,"#stocks #finance",neutral,business
+1011,weather_watcher,"Another rainy day in the city. When will spring finally arrive? #rain #weather",2024-03-15T07:30:00Z,12,89,23,"#rain #weather",negative,weather
+1012,pet_owner,"My dog learned a new trick today! So proud of my furry friend #dogs #pets",2024-03-15T15:20:00Z,23,178,12,"#dogs #pets",positive,lifestyle
+1013,game_streamer,"Streaming live on Twitch tonight. Come watch me fail at this new game #gaming #twitch",2024-03-15T19:45:00Z,34,267,45,"#gaming #twitch",neutral,entertainment
+1014,health_advocate,"Regular exercise and healthy eating are key to a long life #health #wellness",2024-03-15T12:30:00Z,56,389,34,"#health #wellness",positive,health
+1015,art_collector,"Visited the new art exhibition today. Some pieces were thought-provoking #art #culture",2024-03-15T16:15:00Z,18,145,28,"#art #culture",positive,culture
+1016,social_critic,"Social media is destroying real human connections. We need to disconnect more often",2024-03-15T20:30:00Z,234,567,123,,negative,technology
+1017,fashion_blogger,"Love this new sustainable fashion brand. Style and ethics can coexist #fashion #sustainable",2024-03-15T11:45:00Z,45,234,19,"#fashion #sustainable",positive,fashion
+1018,comedy_fan,"That comedy show had me laughing until my stomach hurt. Pure entertainment #comedy",2024-03-15T22:15:00Z,34,198,12,"#comedy",positive,entertainment
+1019,environmental_ist,"Climate change is real and we need action now. The planet cannot wait #climatechange",2024-03-15T14:45:00Z,123,678,89,"#climatechange",neutral,environment
+1020,photographer,"Golden hour photography session was perfect today. Nature never disappoints #photography",2024-03-15T18:30:00Z,67,445,34,"#photography",positive,art
+1021,chef_amateur,"Cooking disaster tonight. Smoke alarm was my timer again #cooking #fail",2024-03-15T19:20:00Z,89,356,67,"#cooking #fail",negative,lifestyle
+1022,book_reviewer,"Just finished reading this thriller. Couldn't put it down! #books #reading",2024-03-15T23:45:00Z,23,167,45,"#books #reading",positive,literature
+1023,crypto_trader,"Bitcoin is showing interesting patterns today. Market volatility continues #crypto #bitcoin",2024-03-15T10:15:00Z,67,234,78,"#crypto #bitcoin",neutral,finance
+1024,parent_blogger,"Kids said the funniest thing today. Parenthood is full of surprises #parenting #kids",2024-03-15T17:45:00Z,45,289,23,"#parenting #kids",positive,family
+1025,science_nerd,"New research on quantum computing published today. Fascinating possibilities ahead #science",2024-03-15T13:20:00Z,34,178,56,"#science",positive,science
+1026,car_enthusiast,"Test drove the new electric vehicle. Impressive acceleration and silent ride #cars #electric",2024-03-15T16:30:00Z,56,323,34,"#cars #electric",positive,automotive
+1027,gardener_home,"Spring planting season has begun! Excited to see my garden bloom #gardening #spring",2024-03-15T09:15:00Z,23,145,18,"#gardening #spring",positive,lifestyle
+1028,political_pundit,"Recent policy changes raise important questions about future direction #politics #policy",2024-03-15T15:45:00Z,145,423,234,"#politics #policy",neutral,politics
+1029,coffee_addict,"Third cup of coffee today and it's only noon. No regrets #coffee #caffeine",2024-03-15T12:00:00Z,78,267,45,"#coffee #caffeine",neutral,lifestyle
+1030,dance_instructor,"Teaching new choreography to my students today. Movement is pure joy #dance #teaching",2024-03-15T18:15:00Z,34,198,23,"#dance #teaching",positive,arts
+1031,startup_founder,"Another late night at the office building our dream. Entrepreneurship is tough #startup",2024-03-15T01:30:00Z,67,345,67,"#startup",neutral,business
+1032,history_buff,"Learning about ancient civilizations never gets old. History repeats itself #history",2024-03-15T14:20:00Z,23,134,34,"#history",positive,education
+1033,yoga_practitioner,"Morning yoga session brought peace to my chaotic day #yoga #mindfulness",2024-03-15T07:45:00Z,45,234,18,"#yoga #mindfulness",positive,wellness
+1034,news_anchor,"Reporting on today's breaking news. Stay informed and stay safe everyone",2024-03-15T18:00:00Z,234,567,123,,neutral,news
+1035,volunteer_worker,"Spent the day helping at the local food bank. Community service fills the heart #volunteer",2024-03-15T16:45:00Z,56,389,45,"#volunteer",positive,community
+1036,language_learner,"Practicing Spanish every day is paying off. ¡Hablo español mejor ahora! #language #spanish",2024-03-15T20:15:00Z,34,178,28,"#language #spanish",positive,education
+1037,real_estate_agent,"Housing market showing signs of stabilization after months of volatility #realestate",2024-03-15T11:30:00Z,78,267,56,"#realestate",neutral,business
+1038,makeup_artist,"Created a stunning look for today's photoshoot. Artistry meets beauty #makeup #beauty",2024-03-15T13:45:00Z,67,345,34,"#makeup #beauty",positive,beauty
+1039,outdoor_adventurer,"Hiking trail was challenging but the summit view was worth every step #hiking #nature",2024-03-15T17:20:00Z,89,456,67,"#hiking #nature",positive,outdoor
+1040,mental_health_advocate,"Taking care of your mental health is just as important as physical health #mentalhealth",2024-03-15T10:45:00Z,145,678,89,"#mentalhealth",positive,health
+1041,tech_reviewer,"Latest smartphone release underwhelming. Innovation seems to be slowing down #tech #smartphone",2024-03-15T14:15:00Z,123,445,178,"#tech #smartphone",negative,technology
+1042,baker_professional,"Fresh bread aroma filling the bakery this morning. Nothing beats homemade #baking #bread",2024-03-15T06:30:00Z,34,234,23,"#baking #bread",positive,food
+1043,podcast_host,"Great conversation with today's guest about future of work. Episode drops tomorrow #podcast",2024-03-15T21:45:00Z,67,289,45,"#podcast",positive,media
+1044,wedding_planner,"Beautiful ceremony today despite the unexpected rain. Love conquers all weather #wedding",2024-03-15T19:30,56,378,34,"#wedding",positive,events
+1045,economist_analyst,"Inflation rates showing concerning trends. Economic indicators need careful monitoring #economics",2024-03-15T12:45:00Z,89,234,67,"#economics",negative,finance
+1046,sleep_researcher,"Study shows importance of 8 hours sleep for cognitive function. Rest is productivity #sleep #health",2024-03-15T08:20:00Z,78,345,56,"#sleep #health",positive,health
+1047,urban_planner,"New city development project aims to create more green spaces for residents #urbanplanning",2024-03-15T15:30:00Z,45,198,67,"#urbanplanning",positive,community
+1048,wine_sommelier,"Tasting notes from today's vineyard visit. Exceptional vintage with complex flavors #wine #tasting",2024-03-15T18:45,23,167,12,"#wine #tasting",positive,food
+1049,cybersecurity_expert,"Recent data breach highlights importance of strong password practices #cybersecurity #privacy",2024-03-15T11:15:00Z,156,567,234,"#cybersecurity #privacy",neutral,technology
+1050,marine_biologist,"Ocean research expedition revealed fascinating deep-sea creatures today #marine #science",2024-03-15T16:20:00Z,67,389,45,"#marine #science",positive,science
+1051,delivery_driver,"Traffic was brutal today but all packages delivered on time #delivery #work",2024-03-15T17:45:00Z,23,134,18,"#delivery #work",neutral,work
+1052,interior_designer,"Completed room makeover exceeds client expectations. Design transforms spaces #interior #design",2024-03-15T14:30:00Z,45,267,34,"#interior #design",positive,design
+1053,stand_up_comedian,"Bombing on stage teaches you more than killing. Every performance is learning #comedy #standup",2024-03-15T23:15:00Z,78,234,56,"#comedy #standup",neutral,entertainment
+1054,nutrition_coach,"Meal prep Sunday sets the tone for healthy eating all week #nutrition #mealprep",2024-03-15T19:00:00Z,56,323,23,"#nutrition #mealprep",positive,health
+1055,antique_collector,"Found rare vintage item at estate sale today. Historical treasures still exist #antiques #vintage",2024-03-15T13:15:00Z,34,178,28,"#antiques #vintage",positive,collecting
+1056,emergency_responder,"Another long shift but grateful to help those in need #emt #firstresponder",2024-03-15T06:45:00Z,89,456,67,"#emt #firstresponder",positive,service
+1057,drone_operator,"Aerial photography session captured stunning landscape views today #drone #photography",2024-03-15T16:30:00Z,45,234,34,"#drone #photography",positive,technology
+1058,retirement_planner,"Starting early with retirement savings pays compound interest dividends #retirement #finance",2024-03-15T10:30:00Z,67,289,45,"#retirement #finance",positive,finance
+1059,theater_director,"Rehearsals are intense but opening night will be magical #theater #drama",2024-03-15T20:45:00Z,23,167,56,"#theater #drama",positive,arts
+1060,climate_scientist,"New data confirms accelerating ice sheet melting patterns. Urgent action needed #climate #science",2024-03-15T12:20:00Z,234,678,145,"#climate #science",negative,environment
+1061,bartender_craft,"Created new cocktail recipe tonight. Customers love experimental flavors #cocktails #bartending",2024-03-15T22:30,34,198,23,"#cocktails #bartending",positive,food
+1062,solar_installer,"Renewable energy adoption growing rapidly. Clean power future looks bright #solar #renewable",2024-03-15T14:45:00Z,78,345,67,"#solar #renewable",positive,environment
+1063,voice_actor,"Recording session for animation project was challenging but fun #voiceacting #animation",2024-03-15T18:20:00Z,45,234,34,"#voiceacting #animation",positive,entertainment
+1064,tax_preparer,"Tax season stress levels reaching maximum capacity. April deadline approaches #taxes #accounting",2024-03-15T21:15:00Z,123,367,89,"#taxes #accounting",negative,finance
+1065,furniture_maker,"Handcrafted dining table completed after weeks of meticulous work #woodworking #craftsmanship",2024-03-15T15:45:00Z,56,289,23,"#woodworking #craftsmanship",positive,crafts
+1066,sports_journalist,"Championship game analysis reveals strategic coaching decisions #sports #journalism",2024-03-15T11:30:00Z,89,234,78,"#sports #journalism",neutral,sports
+1067,flight_attendant,"Turbulence made service challenging but passengers remained calm #aviation #travel",2024-03-15T09:45:00Z,34,167,45,"#aviation #travel",neutral,travel
+1068,insurance_agent,"Helping families protect their financial future through proper coverage #insurance #family",2024-03-15T13:30:00Z,23,134,34,"#insurance #family",positive,finance
+1069,landscape_architect,"New public park design incorporates native plants and sustainable drainage #landscape #sustainability",2024-03-15T16:15:00Z,67,323,56,"#landscape #sustainability",positive,environment
+1070,food_critic,"Restaurant review: Exceptional service but disappointing main courses #food #restaurant",2024-03-15T20:00:00Z,78,245,67,"#food #restaurant",negative,food
+1071,physical_therapist,"Patient progress in recovery brings joy to this challenging profession #physicaltherapy #healthcare",2024-03-15T08:30:00Z,45,234,23,"#physicaltherapy #healthcare",positive,healthcare
+1072,cryptocurrency_miner,"Mining rig efficiency improved with new cooling system upgrade #crypto #mining",2024-03-15T17:30:00Z,56,178,78,"#crypto #mining",positive,technology
+1073,event_coordinator,"Wedding planning stress worth it when seeing couple's happiness #wedding #events",2024-03-15T19:15:00Z,67,356,34,"#wedding #events",positive,events
+1074,mechanical_engineer,"New engine design shows 15% efficiency improvement in testing phase #engineering #innovation",2024-03-15T14:00:00Z,34,167,45,"#engineering #innovation",positive,engineering
+1075,librarian_public,"Quiet day at library but helped several patrons find perfect books #library #books",2024-03-15T12:15:00Z,23,145,18,"#library #books",positive,education
+1076,fire_chief,"Fire prevention education program launches in local schools next week #fire #safety",2024-03-15T10:00:00Z,89,367,67,"#fire #safety",positive,safety
+1077,graphic_designer,"Logo design process requires balancing creativity with client brand vision #design #branding",2024-03-15T15:20:00Z,45,234,56,"#design #branding",neutral,design
+1078,professional_organizer,"Decluttered home office increases productivity and reduces stress levels #organization #productivity",2024-03-15T11:45:00Z,67,289,34,"#organization #productivity",positive,lifestyle
+1079,meteorologist_local,"Severe weather warning issued for tomorrow evening. Stay safe everyone #weather #safety",2024-03-15T18:45,123,456,89,"#weather #safety",neutral,weather
+1080,horse_trainer,"Young horse showing excellent progress in training sessions #horses #training",2024-03-15T07:20:00Z,34,178,23,"#horses #training",positive,animals
+1081,data_analyst,"Customer behavior patterns reveal interesting seasonal shopping trends #data #analytics",2024-03-15T13:45:00Z,78,234,67,"#data #analytics",neutral,business
+1082,massage_therapist,"Stress relief through therapeutic massage helps clients find balance #massage #wellness",2024-03-15T16:45:00Z,45,267,34,"#massage #wellness",positive,wellness
+1083,film_editor,"Post-production magic transforms raw footage into compelling storytelling #film #editing",2024-03-15T22:00:00Z,56,234,45,"#film #editing",positive,entertainment
+1084,pest_control_technician,"Ant invasion eliminated using environmentally safe treatment methods #pestcontrol #environment",2024-03-15T09:30:00Z,23,134,28,"#pestcontrol #environment",positive,service
+1085,jewelry_designer,"Custom engagement ring design brings couple's vision to sparkling reality #jewelry #design",2024-03-15T14:20:00Z,67,345,23,"#jewelry #design",positive,crafts
+1086,truck_driver_long_haul,"Cross-country delivery completed safely despite challenging weather conditions #trucking #delivery",2024-03-15T05:45:00Z,34,167,45,"#trucking #delivery",positive,transportation
+1087,swim_instructor,"Teaching children water safety while making lessons fun and engaging #swimming #safety",2024-03-15T17:00:00Z,45,234,34,"#swimming #safety",positive,education
+1088,optometrist_practice,"Regular eye exams detect problems early and preserve precious vision #eyecare #health",2024-03-15T11:20:00Z,56,189,23,"#eyecare #health",positive,healthcare
+1089,street_performer,"Busking downtown brings music to busy commuters during rush hour #music #street",2024-03-15T18:30,78,267,56,"#music #street",positive,entertainment
+1090,hvac_technician,"Air conditioning repair completed just before summer heat wave arrives #hvac #repair",2024-03-15T13:15:00Z,23,134,18,"#hvac #repair",positive,service
+1091,florist_wedding,"Bridal bouquet arrangement combines elegant roses with seasonal wildflowers #flowers #wedding",2024-03-15T10:45:00Z,67,323,45,"#flowers #wedding",positive,events
+1092,security_guard_night,"Quiet shift at office building but vigilance never wavers #security #safety",2024-03-15T03:30:00Z,12,89,23,"#security #safety",neutral,security
+1093,dog_groomer_professional,"Pampered poodle transformation from shaggy to fabulous complete #dogs #grooming",2024-03-15T15:30:00Z,89,456,34,"#dogs #grooming",positive,pets
+1094,electrician_residential,"Home rewiring project enhances safety and increases property value #electrical #home",2024-03-15T12:45:00Z,34,178,56,"#electrical #home",positive,service
+1095,tattoo_artist_custom,"Memorial tattoo honors client's beloved grandmother with meaningful symbolism #tattoo #memorial",2024-03-15T19:45:00Z,56,289,67,"#tattoo #memorial",positive,art
+1096,plumber_emergency,"Burst pipe repair prevented major water damage to family home #plumbing #emergency",2024-03-15T07:15:00Z,45,234,23,"#plumbing #emergency",positive,service
+1097,carpenter_finish,"Custom kitchen cabinets installation transforms cooking space into chef's paradise #carpentry #kitchen",2024-03-15T16:00:00Z,67,345,45,"#carpentry #kitchen",positive,home
+1098,locksmith_24hour,"Locked out customer grateful for quick response during midnight emergency #locksmith #service",2024-03-15T01:20:00Z,23,134,18,"#locksmith #service",positive,service
+1099,window_cleaner_commercial,"Skyscraper window cleaning requires courage and precision at great heights #windows #cleaning",2024-03-15T08:45:00Z,78,234,34,"#windows #cleaning",neutral,service
+1100,appliance_repair_tech,"Washing machine resurrection saves family from laundromat expenses #appliance #repair",2024-03-15T14:30:00Z,34,167,28,"#appliance #repair",positive,service

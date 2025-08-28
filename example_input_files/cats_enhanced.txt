@@ -1,0 +1,11 @@
+Build these ten image prompts in parallel using Task:
+- "A cat sits on a chair"
+- "A cat sits on a chair rule of thirds"
+- "A cat sits on a chair rule of thirds, with strong sunlight beaming on from blurry window"
+- "A fluffy orange cat curled up on a windowsill, sunlight streaming in"
+- "A black cat with green eyes perched on a bookshelf surrounded by plants"
+- "A kitten playing with a ball of yarn on a wooden floor"
+- "A cat looking out a rainy window, reflections on the glass"
+- "A group of cats lounging in a sunbeam on a patterned rug"
+- "A white cat with blue eyes sitting in a field of wildflowers"
+- "A tabby cat stretching on a cozy blanket near a fireplace"

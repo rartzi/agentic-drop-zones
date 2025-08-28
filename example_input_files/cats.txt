@@ -1,0 +1,4 @@
+Build these three image prompts in parallel using Task:
+- "A cat sits on a chair"
+- "A cat sits on a chair rule of thirds"
+- "A cat sits on a chair rule of thirds, with strong sunlight beaming on from blurry 

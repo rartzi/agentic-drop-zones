@@ -1,0 +1,10 @@
+{
+  "edit_image": "./edit_image_input_files/cat_sitting_in_chair.jpg",
+  "prompts": [
+    "Change the fur of the cat to black",
+    "Change the fur of the cat to orange",
+    "Change the fur of the cat to gray",
+    "Change the fur of the cat to yellow",
+    "Change the fur of the cat to blue"
+  ]
+}
