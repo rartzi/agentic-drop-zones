@@ -1,4 +1,5 @@
 # Agentic Drop Zone
+> See what you can do with the Agentic Drop Zone [in this video](https://youtu.be/gyjoXC8lzIw).
 
 Automated file processing system that monitors directories and triggers agents (Claude Code, Gemini CLI, Codex CLI) when files are dropped.
 
