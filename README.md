@@ -115,7 +115,7 @@ The system supports multiple AI agents with different capabilities:
 - [Documentation](https://github.com/google-gemini/gemini-cli)
 
 ### Codex CLI
-- **Status**: ⏳ Not yet implemented
+- **Status**: ❌ Not yet implemented
 - **SDK**: Would use CLI via subprocess
 - **Output**: TBD
 - **Models**: `gpt-5`
