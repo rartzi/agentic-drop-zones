@@ -96,12 +96,14 @@ drop_zones:
 The system supports multiple AI agents with different capabilities:
 
 ### Claude Code (Most Capable)
+- 
 - **Status**: ✅ Fully implemented
-- **SDK**: Native Python SDK with streaming support
+- **SDK**: Native Python, Typescript, and CLI SDK with streaming support
 - **Output**: Clean, formatted panels with real-time streaming
 - **Models**: `sonnet`, `opus`, `haiku`
 - **MCP Support**: Full MCP tool integration
 - **Best For**: Complex tasks requiring tool use, SOTA performance
+- [Documentation](https://docs.anthropic.com/en/docs/claude-code/sdk/sdk-overview)
 
 ### Gemini CLI
 - **Status**: 🟡 Implemented with subprocess streaming
@@ -110,6 +112,7 @@ The system supports multiple AI agents with different capabilities:
 - **Models**: `gemini-2.5-pro` (default), `gemini-2.5-flash`
 - **Flags**: `--yolo` (auto-approve), `--sandbox` (sandboxing)
 - **Best For**: Quick tasks, alternative models outside of Anthropic models
+- [Documentation](https://github.com/google-gemini/gemini-cli)
 
 ### Codex CLI
 - **Status**: ⏳ Not yet implemented
@@ -117,6 +120,7 @@ The system supports multiple AI agents with different capabilities:
 - **Output**: TBD
 - **Models**: `gpt-5`
 - **Best For**: Future implementation (Up for a challenge?)
+- [Documentation](https://github.com/openai/codex)
 
 ### Configuration Example
 See `drops.yaml` for agent setup:
