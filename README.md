@@ -224,3 +224,9 @@ The system comes with several pre-configured workflows. Each requires specific s
 - The `zone_dirs` should be a single directory (`zone_dir`), and this should be passed into each prompt as a prompt variable (## Variables) and used to create the output directory. Right now it's static in the respective prompts.
 - Get Codex CLI working (they don't have support for local .codex/config.toml at the time of writing)
 - Improve `Gemini CLI` streaming output to be more readable and less line by line based. They don't have an SDK, so we're using the CLI.
+
+## Master AI Coding 
+
+Learn to code with AI with foundational [Principles of AI Coding](https://agenticengineer.com/principled-ai-coding?y=adrzone)
+
+Follow the [IndyDevDan youtube channel](https://www.youtube.com/@indydevdan) for more Agentic Coding tips and tricks.
