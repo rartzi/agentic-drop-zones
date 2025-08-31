@@ -10,6 +10,8 @@ Automated file processing system that monitors directories and triggers agents (
 - 🧩 Run multiple agents in parallel
 - 🚀 Run arbitrary agentic workflows: Do 'anything' your agent can do
 
+<img src="./images/arch.png" alt="System Architecture Diagram" style="max-width: 800px;">
+
 ## System Architecture
 
 ```mermaid
@@ -30,13 +32,6 @@ graph LR
         K --> L[Display in Console]
         L --> B
     end
-    
-    style A fill:#e1f5fe
-    style G fill:#fff9c4
-    style H fill:#ffccbc
-    style I fill:#d4edda
-    style J fill:#d1ecf1
-    style L fill:#c8e6c9
 ```
 
 
@@ -70,33 +65,13 @@ cp example_input_files/echo.txt agentic_drop_zone/echo_zone/
 - Gemini CLI supports MCP servers, run `cp .gemini/settings.json.sample .gemini/settings.json` and edit the file with your API keys
 - Codex CLI does not support MCP servers without modifying root level `~/.codex/config.toml` (untested)
 
-## ⚠️ Warning: Dangerous Execution
+## ⚠️ Dangerous Agent Execution
 
-**IMPORTANT:** Agents are given complete control over your system with dangerous execution capabilities. This includes:
+**IMPORTANT:** Agents are given complete control over your system with dangerous execution capabilities. Agent permissions are as follows:
 
-- **File system access:** Can read, write, delete, and move ANY files
-- **Command execution:** Can run ANY bash commands including `rm -rf`, system modifications, etc.
-- **Network access:** Can make API calls, download files, access external services
-- **No sandboxing:** Agents run with the same permissions as the user running the script
-
-### Safety Guidelines:
-
-1. **Review prompts carefully** - Understand exactly what your prompts will do before using them
-2. **Add guardrails** - Include explicit restrictions in your prompts to prevent destructive actions
-3. **Test in safe environments** - Use test directories and non-critical data first
-4. **Backup important data** - Agents can permanently delete or modify files
-5. **Monitor agent actions** - Watch the console output to see what the agent is doing
-6. **Use specific directories** - Limit drop zones to specific folders, not system directories
-
-### Example Guardrails in Prompts:
-
-```markdown
-## Safety Rules
-- NEVER delete files outside of the output directory
-- NEVER modify system files or configurations
-- ALWAYS create backups before modifying original files
-- ALWAYS move processed files to archive, never delete them
-```
+- Claude Code runs with `bypassPermissions` mode, which allows all tools without prompting
+- Gemini CLI runs with `yolo` flag with the `--sandbox` flag, which auto-approves all actions but prevents moving outside of the sandbox directory
+- Codex CLI (not implemented)
 
 **By using this system, you acknowledge the risks and take full responsibility for any actions performed by the agents.**
 
