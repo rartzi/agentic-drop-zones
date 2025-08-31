@@ -244,35 +244,6 @@ The system comes with several pre-configured workflows. Each requires specific s
 
 **Output:** Generates markdown debrief files with comprehensive analysis in `morning_debrief_zone/debrief_output/<date_time>/`
 
-### 🔧 Setup Instructions
-
-1. **Install dependencies:**
-   ```bash
-   # Ensure you have uv installed
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-
-2. **Set environment variables:**
-   ```bash
-   # Required
-   export ANTHROPIC_API_KEY="your-claude-api-key"
-   export CLAUDE_CODE_PATH="path-to-claude-cli"
-   
-   # Optional (for image workflows)
-   export REPLICATE_API_TOKEN="your-replicate-token"
-   ```
-
-3. **Configure MCP tools (for image workflows):**
-   ```bash
-   cp .mcp.json.sample .mcp.json
-   # Edit .mcp.json with your Replicate API token
-   ```
-
-4. **Run the system:**
-   ```bash
-   uv run sfs_agentic_drop_zone.py
-   ```
-
 ## Improvements
 
 - The `zone_dirs` should be a single directory (`zone_dir`), and this should be passed into each prompt as a prompt variable (## Variables) and used to create the output directory. Right now it's static in the respective prompts.
