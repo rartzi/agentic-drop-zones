@@ -53,9 +53,22 @@ graph LR
 # Install uv (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Setup environment variables (at least Claude Code API key)
+export ANTHROPIC_API_KEY="your-claude-api-key"
+export CLAUDE_CODE_PATH="path-to-claude-cli" # default to claude, may need to run which claude to find the path
+
 # Run with uv
 uv run sfs_agentic_drop_zone.py
+
+# Drag and drop (copy to reuse) files from example_input_files folder into the drop zone directories
+cp example_input_files/echo.txt agentic_drop_zone/echo_zone/
 ```
+
+## MCP Support
+
+- Claude Code supports MCP servers, run `cp .mcp.json.sample .mcp.json` and edit the file with your API keys
+- Gemini CLI supports MCP servers, run `cp .gemini/settings.json.sample .gemini/settings.json` and edit the file with your API keys
+- Codex CLI does not support MCP servers without modifying root level `~/.codex/config.toml` (untested)
 
 ## ⚠️ Warning: Dangerous Execution
 
@@ -101,21 +114,6 @@ drop_zones:
     mcp_server_file: ".mcp.json"              # MCP tools config (optional)
     create_zone_dir_if_not_exists: true       # Auto-create directories
 ```
-
-## Prompt Templates
-
-Create reusable prompts in `.claude/commands/` with variables:
-
-```markdown
----
-name: Process File
-allowed-tools: Bash, Read, Write
----
-
-Process the file at: [[FILE_PATH]]
-```
-
-The `[[FILE_PATH]]` placeholder is replaced with the actual dropped file path.
 
 ## Agents
 
