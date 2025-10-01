@@ -1,0 +1,3 @@
+Test prompts for optimized image generation:
+- "A friendly robot working at a computer desk"
+- "A beautiful sunset over mountains with clouds"

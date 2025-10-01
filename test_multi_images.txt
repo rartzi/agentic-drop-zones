@@ -1,0 +1,9 @@
+Multi-Image Generation Test
+
+Testing the renamed vertex_ai_image_generator.py script with multiple parallel image generation:
+
+- "A futuristic city skyline at sunset with flying cars and neon lights"
+- "A serene mountain lake with crystal clear water reflecting snow-capped peaks"
+- "A cozy coffee shop interior with warm lighting and people reading books"
+- "A space station orbiting Earth with astronauts working outside in spacesuits"
+- "A magical forest with glowing mushrooms and fairy lights in the trees"

@@ -1,17 +1,16 @@
 # Agentic Drop Zone
-> See what you can do with the Agentic Drop Zone [in this video](https://youtu.be/gyjoXC8lzIw).
 
-Automated file processing system that monitors directories and triggers agents (Claude Code, Gemini CLI, Codex CLI) when files are dropped.
+Automated file processing system that monitors directories and triggers AI agents when files are dropped. Built with Claude Code SDK, AWS Bedrock, and Google Cloud integration.
 
 ## Features
 
-- 📝 Simple single file script: `sfs_agentic_drop_zone.py`
-- ⚙️ Configurable drop zones in `drops.yaml`
-- 🤖 Agent agnostic implementation: Claude Code, Gemini CLI, Codex CLI (unimplemented)
-- 🧩 Run multiple agents in parallel
-- 🚀 Run arbitrary agentic workflows: Do 'anything' your agent can do
-
-<img src="./images/arch.png" alt="System Architecture Diagram" style="max-width: 800px;">
+- 📝 **Single-file Python script** with `uv` dependency management
+- ⚙️ **Configurable drop zones** via `drops.yaml`
+- 🤖 **Claude Code SDK** with AWS Bedrock integration
+- 🎨 **Google Cloud Vertex AI** for parallel image generation
+- 🚀 **5 pre-built workflows**: Echo, Images, Training Data, Audio Transcription, Finance
+- 📊 **Real-time streaming** with Rich console output
+- ⚡ **Tool access** with `bypassPermissions` for autonomous agent actions
 
 ## System Architecture
 
@@ -24,9 +23,7 @@ graph LR
         C -->|No| E[Ignore]
         D --> F[Replace FILE_PATH Variable]
         F --> G{Select Agent}
-        G -->|claude_code| H[Claude Code<br/>Full tool access<br/>MCP servers]
-        G -->|gemini_cli| I[Gemini CLI<br/>Google AI<br/>]
-        G -->|codex_cli| J[Codex CLI<br/>OpenAI<br/>unimplemented]
+        G --> H[Claude Code Agent<br/>AWS Bedrock + Full Tool Access]
         H --> K[Stream Response]
         I --> K
         J --> K
@@ -49,9 +46,14 @@ graph LR
 # Install uv (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Setup environment variables (at least Claude Code API key)
-export ANTHROPIC_API_KEY="your-claude-api-key"
-export CLAUDE_CODE_PATH="path-to-claude-cli" # default to claude, may need to run which claude to find the path
+# Setup environment variables for AWS Bedrock (recommended)
+export CLAUDE_CODE_USE_BEDROCK=1
+export AWS_BEARER_TOKEN_BEDROCK="your-api-key"
+export AWS_REGION="your-aws-region"
+export CLAUDE_CODE_PATH="claude" # default to claude, may need to run which claude to find the path
+
+# OR for direct Anthropic API:
+# export ANTHROPIC_API_KEY="your-claude-api-key"
 
 # Run with uv
 uv run sfs_agentic_drop_zone.py
@@ -63,8 +65,7 @@ cp example_input_files/echo.txt agentic_drop_zone/echo_zone/
 ## MCP Support
 
 - Claude Code supports MCP servers, run `cp .mcp.json.sample .mcp.json` and edit the file with your API keys
-- Gemini CLI supports MCP servers, run `cp .gemini/settings.json.sample .gemini/settings.json` and edit the file with your API keys
-- Codex CLI does not support MCP servers without modifying root level `~/.codex/config.toml` (untested)
+- MCP servers can be configured via `mcp_server_file` in drop zone configuration
 
 ## ⚠️ Dangerous Agent Execution
 
@@ -105,22 +106,11 @@ The system supports multiple AI agents with different capabilities:
 - **Best For**: Complex tasks requiring tool use, SOTA performance
 - [Documentation](https://docs.anthropic.com/en/docs/claude-code/sdk/sdk-overview)
 
-### Gemini CLI
-- **Status**: 🟡 Implemented with subprocess streaming
-- **SDK**: No SDK - uses CLI via subprocess
-- **Output**: Line-by-line streaming in panels (due to CLI limitations)
-- **Models**: `gemini-2.5-pro` (default), `gemini-2.5-flash`
-- **Flags**: `--yolo` (auto-approve), `--sandbox` (sandboxing)
-- **Best For**: Quick tasks, alternative models outside of Anthropic models
-- [Documentation](https://github.com/google-gemini/gemini-cli)
-
-### Codex CLI
-- **Status**: ❌ Not yet implemented
-- **SDK**: Would use CLI via subprocess
-- **Output**: TBD
-- **Models**: `gpt-5`
-- **Best For**: Future implementation (Up for a challenge?)
-- [Documentation](https://github.com/openai/codex)
+### Agent Implementation
+- **Primary Agent**: Claude Code via AWS Bedrock
+- **Tool Access**: Full system access with `bypassPermissions` mode
+- **Processing**: Real-time streaming with Rich console output
+- **Authentication**: AWS credentials (`~/.aws/credentials`)
 
 ### Configuration Example
 See `drops.yaml` for agent setup:
@@ -224,11 +214,54 @@ The system comes with several pre-configured workflows. Each requires specific s
 
 **Output:** Generates markdown debrief files with comprehensive analysis in `morning_debrief_zone/debrief_output/<date_time>/`
 
+## File Structure
+
+```
+agentic-drop-zones/
+├── sfs_agentic_drop_zone.py     # Main application
+├── drops.yaml                   # Configuration
+├── tools/                       # External tools and scripts
+│   └── vertex_ai_image_generator.py # Google Cloud image generation tool
+├── .claude/commands/            # Prompt templates (5 active workflows)
+├── agentic_drop_zone/           # Drop directories (auto-created)
+├── example_input_files/         # Sample files for testing
+├── docs/                        # All documentation
+│   ├── CLAUDE.md               # Instructions for future Claude instances
+│   ├── agentic_drop_zone_flow_diagram.md  # System flow diagrams
+│   └── *.md                    # Technical docs and references
+├── .env.sample                  # Environment configuration template
+└── README.md                   # This file
+```
+
+## Quick Start
+
+1. **Setup Environment:**
+   ```bash
+   cp .env.sample .env
+   # Edit .env with your AWS/Google Cloud credentials
+   ```
+
+2. **Run the System:**
+   ```bash
+   uv run sfs_agentic_drop_zone.py
+   ```
+
+3. **Test Workflows:**
+   ```bash
+   # Test echo
+   cp example_input_files/echo.txt agentic_drop_zone/echo_zone/
+
+   # Test image generation
+   cp example_input_files/cats.txt agentic_drop_zone/generate_images_zone/
+   ```
+
+For detailed setup and usage instructions, see `docs/CLAUDE.md`.
+
 ## Improvements
 
 - The `zone_dirs` should be a single directory (`zone_dir`), and this should be passed into each prompt as a prompt variable (## Variables) and used to create the output directory. Right now it's static in the respective prompts.
-- Get Codex CLI working (they don't have support for local .codex/config.toml at the time of writing)
-- Improve `Gemini CLI` streaming output to be more readable and less line by line based. They don't have an SDK, so we're using the CLI.
+- Add more workflow templates for different use cases
+- Implement MCP server integration for extended tool capabilities
 
 ## Master AI Coding 
 

@@ -1,5 +1,4 @@
-adw/
-*zone/
+# Python
 *.pyc
 *.pyo
 *.pyd
@@ -7,12 +6,48 @@ adw/
 *.pyz
 *.pywz
 *.pyzw
+__pycache__/
+.venv/
+
+# Environment & Config
 .env
+.env.*
 .mcp.json
-!sfs_agentic_drop_zone.py
+
+# Credentials & Keys (CRITICAL SECURITY)
+service-account-key.json
+*service-account*.json
+*.json.key
+*-key.json
+*_key.json
+*credentials*.json
+*.pem
+*.p12
+*.pfx
+*.key
+*.crt
+*.csr
+
+# API Keys & Tokens
+*api*key*
+*token*
+*secret*
+*password*
+
+# Drop Zone Directories (keep structure, ignore contents)
+agentic_drop_zone/*/
+!agentic_drop_zone/*/.gitkeep
+
+# Output & Cache
 output/
 .DS_Store
+*.log
 
+# Private Settings
 **private/
 .gemini/settings.json
 .codex/settings.json
+
+# Test Files
+*test.txt
+test_*.py

@@ -48,13 +48,25 @@ FILE_PATH_PLACEHOLDER = "[[FILE_PATH]]"
 # Environment variable checks
 def check_environment_variables():
     """Check for required environment variables at startup."""
-    required_vars = {
-        "ANTHROPIC_API_KEY": "Required for Claude Code SDK authentication",
-        "CLAUDE_CODE_PATH": "Required path to Claude CLI executable",
-    }
+    # Check if using Bedrock or direct Anthropic API
+    use_bedrock = os.getenv("CLAUDE_CODE_USE_BEDROCK", "0") == "1"
+
+    if use_bedrock:
+        required_vars = {
+            "AWS_REGION": "Required AWS region for Bedrock",
+            "CLAUDE_CODE_PATH": "Required path to Claude CLI executable",
+        }
+        # Note: AWS_BEARER_TOKEN_BEDROCK is optional if using ~/.aws/credentials
+    else:
+        required_vars = {
+            "ANTHROPIC_API_KEY": "Required for Claude Code SDK authentication",
+            "CLAUDE_CODE_PATH": "Required path to Claude CLI executable",
+        }
 
     optional_vars = {
-        "REPLICATE_API_TOKEN": "Optional - needed for image generation/editing (won't be able to generate images without it)"
+        "REPLICATE_API_TOKEN": "Optional - needed for Replicate image generation/editing",
+        "GOOGLE_APPLICATION_CREDENTIALS": "Optional - needed for Google Cloud image generation",
+        "GOOGLE_CLOUD_PROJECT": "Optional - needed for Google Cloud image generation"
     }
 
     missing_required = []
@@ -86,7 +98,8 @@ def check_environment_variables():
             console.print(f"[dim]{item}[/dim]")
         console.print()
 
-    console.print("[green]✅ All required environment variables are set[/green]")
+    api_mode = "AWS Bedrock" if use_bedrock else "Anthropic API"
+    console.print(f"[green]✅ All required environment variables are set for {api_mode}[/green]")
 
 
 # Configure logging

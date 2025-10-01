@@ -1,26 +1,15 @@
 drop_zones:
-  - name: "Echo Drop Zone"  # Name displayed in logs
-    file_patterns: ["*.txt"]  # File patterns to watch (supports wildcards)
-    reusable_prompt: ".claude/commands/echo.md"  # Path to the reusable prompt file (required)
-    zone_dirs: ["agentic_drop_zone/echo_zone"]  # Directories to monitor (supports * wildcard)
-    events: ["created", "modified"]  # Event types: created, modified, deleted, moved
-    agent: "claude_code"  # Agent type: claude_code, gemini_cli, codex_cli (default: claude_code)
-    model: "sonnet"  # Model to use for Claude Code (default: sonnet)
-    color: "cyan"  # Color for console output (red, blue, green, cyan, yellow, magenta)
-    # mcp_server_file: ".mcp.json" # Uncomment this to use MCP servers - don't bloat your context window if you don't need it
-    create_zone_dir_if_not_exists: true  # Auto-create non-glob directories if missing (default: false)
-  
-  - name: "Gemini Echo Drop Zone"  # Test zone for Gemini CLI
-    file_patterns: ["*.txt"]  # File patterns to watch
-    reusable_prompt: ".claude/commands/echo.md"  # Same echo prompt
-    zone_dirs: ["agentic_drop_zone/gemini_echo_zone"]  # Gemini-specific directory
-    events: ["created"]  # Trigger on file creation
-    agent: "gemini_cli"  # Use Gemini CLI agent
-    model: "gemini-2.5-pro"  # Default Gemini model
-    color: "green"  # Green for Gemini
-    create_zone_dir_if_not_exists: true  # Auto-create directory
-  
-  - name: "Image Generation Drop Zone"
+  - name: "Echo Drop Zone"  # Simple test zone
+    file_patterns: ["*.txt"]
+    reusable_prompt: ".claude/commands/echo.md"
+    zone_dirs: ["agentic_drop_zone/echo_zone"]
+    events: ["created", "modified"]
+    agent: "claude_code"
+    model: "sonnet"
+    color: "cyan"
+    create_zone_dir_if_not_exists: true
+
+  - name: "Google Image Generation Drop Zone"  # Optimized image generation using Google Cloud
     file_patterns: ["*.txt", "*.md"]
     reusable_prompt: ".claude/commands/create_image.md"
     zone_dirs: ["agentic_drop_zone/generate_images_zone"]
@@ -28,29 +17,6 @@ drop_zones:
     agent: "claude_code"
     model: "sonnet"
     color: "blue"
-    mcp_server_file: ".mcp.json"
-    create_zone_dir_if_not_exists: true
-  
-  - name: "Gemini Image Generation Drop Zone"
-    file_patterns: ["*.txt", "*.md"]
-    reusable_prompt: ".claude/commands/create_image.md"
-    zone_dirs: ["agentic_drop_zone/gemini_generate_images_zone"]
-    events: ["created"]
-    agent: "gemini_cli"
-    model: "gemini-2.5-pro"
-    color: "green"
-    mcp_server_file: ".mcp.json"
-    create_zone_dir_if_not_exists: true
-  
-  - name: "Image Edit Drop Zone"
-    file_patterns: ["*.txt", "*.md", "*.json"]
-    reusable_prompt: ".claude/commands/edit_image.md"
-    zone_dirs: ["agentic_drop_zone/edit_images_zone"]
-    events: ["created"]
-    agent: "claude_code"
-    model: "sonnet"
-    color: "red"
-    mcp_server_file: ".mcp.json"
     create_zone_dir_if_not_exists: true
 
   - name: "Training Data Generation Zone"

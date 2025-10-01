@@ -1,0 +1,2 @@
+Testing auth fix for image generation:
+- "A simple test image of a blue sky with white clouds"
