@@ -33,6 +33,16 @@ The project uses uv for Python dependency management with these core libraries:
 5. **Tool Access**: Claude Code gets full tool access (Bash, Read, Write, Glob, Grep) for autonomous workflow execution
 6. **Response Streaming**: Real-time output display using Rich streaming panels with progress indicators
 
+## Logging & Monitoring System
+
+The system includes enhanced logging, error handling, and monitoring capabilities. For complete details see `docs/enhanced_logging_and_monitoring.md`.
+
+### Quick Reference
+- **Log files**: `logs/agentic_drop_zone.log`, `logs/errors.log`, `logs/workflows.log`
+- **Health checks**: `curl http://localhost:8080/health/detailed`
+- **Workflow states**: PENDING → RUNNING → COMPLETED/FAILED/TIMEOUT
+- **Notifications**: Configure `NOTIFICATION_WEBHOOK_URL` for real-time error alerts
+
 ## Development Commands
 
 ### Running the Application

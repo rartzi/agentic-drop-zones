@@ -257,6 +257,38 @@ agentic-drop-zones/
 
 For detailed setup and usage instructions, see `docs/CLAUDE.md`.
 
+## Monitoring & Logging
+
+The system includes comprehensive logging and monitoring capabilities:
+
+### 📊 System Status & Health Checks
+- **Health endpoint**: `curl http://localhost:8080/health`
+- **Detailed status**: `curl http://localhost:8080/health/detailed`
+- **Active workflows**: `curl http://localhost:8080/workflows/active`
+- **Recent workflows**: `curl http://localhost:8080/workflows/recent`
+
+### 📝 Log Files & States
+- **Main logs**: `logs/agentic_drop_zone.log` - Application events (INFO+)
+- **Error logs**: `logs/errors.log` - Errors and critical issues (ERROR+)
+- **Workflow logs**: `logs/workflows.log` - Detailed workflow processing (DEBUG+)
+
+### 🔔 Real-time Notifications
+Configure webhook notifications for errors:
+```bash
+# .env file
+NOTIFICATION_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+NOTIFICATION_MIN_LEVEL=error
+```
+
+### 📈 Workflow States
+- `PENDING` - Queued for processing
+- `RUNNING` - Currently being processed
+- `COMPLETED` - Successfully finished
+- `FAILED` - Error occurred during processing
+- `TIMEOUT` - Exceeded maximum execution time (5 min default)
+
+**Full documentation**: See `docs/enhanced_logging_and_monitoring.md` for complete logging, error handling, and monitoring setup.
+
 ## Improvements
 
 - The `zone_dirs` should be a single directory (`zone_dir`), and this should be passed into each prompt as a prompt variable (## Variables) and used to create the output directory. Right now it's static in the respective prompts.

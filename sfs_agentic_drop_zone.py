@@ -8,18 +8,28 @@
 #     "pyyaml",
 #     "python-dotenv",
 #     "rich",
+#     "structlog",
+#     "httpx",
+#     "fastapi",
+#     "uvicorn",
 # ]
 # ///
 
 """Agentic Drop Zone - File monitoring and processing system."""
 
 import asyncio
+import json
 import logging
 import os
+import signal
+import time
 import yaml
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional, Literal
+from typing import Any, Optional, Literal, Dict, List
+import structlog
+import httpx
 
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, field_validator
@@ -43,6 +53,302 @@ load_dotenv()
 
 # Constants
 FILE_PATH_PLACEHOLDER = "[[FILE_PATH]]"
+
+
+# ===========================
+# ENHANCED LOGGING SYSTEM
+# ===========================
+
+def setup_structured_logging():
+    """Configure structured logging with JSON output and different levels."""
+
+    # Create logs directory if it doesn't exist
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+
+    # Configure standard logging to write to files first
+    log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+    # Main application log
+    main_handler = logging.FileHandler(logs_dir / "agentic_drop_zone.log")
+    main_handler.setFormatter(logging.Formatter(log_format))
+    main_handler.setLevel(logging.INFO)
+
+    # Error log (ERROR and CRITICAL only)
+    error_handler = logging.FileHandler(logs_dir / "errors.log")
+    error_handler.setFormatter(logging.Formatter(log_format))
+    error_handler.setLevel(logging.ERROR)
+
+    # Workflow log (detailed workflow processing)
+    workflow_handler = logging.FileHandler(logs_dir / "workflows.log")
+    workflow_handler.setFormatter(logging.Formatter(log_format))
+    workflow_handler.setLevel(logging.DEBUG)
+
+    # Configure root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+    root_logger.addHandler(main_handler)
+    root_logger.addHandler(error_handler)
+    root_logger.addHandler(workflow_handler)
+
+    # Configure structlog
+    structlog.configure(
+        processors=[
+            structlog.contextvars.merge_contextvars,
+            structlog.processors.TimeStamper(fmt="iso"),
+            structlog.processors.add_log_level,
+            structlog.processors.StackInfoRenderer(),
+            structlog.dev.set_exc_info,
+            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+        ],
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=True,
+    )
+
+    return structlog.get_logger("agentic_drop_zone")
+
+
+# ===========================
+# ERROR NOTIFICATION SYSTEM
+# ===========================
+
+class NotificationLevel(str, Enum):
+    """Notification severity levels."""
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+
+
+class NotificationConfig(BaseModel):
+    """Configuration for notification webhooks."""
+    webhook_url: Optional[str] = Field(default=None, description="Webhook URL for notifications")
+    enabled: bool = Field(default=True, description="Whether notifications are enabled")
+    min_level: NotificationLevel = Field(default=NotificationLevel.ERROR, description="Minimum level to send notifications")
+    timeout: int = Field(default=10, description="Webhook request timeout in seconds")
+
+
+class NotificationService:
+    """Service for sending notifications via webhooks."""
+
+    def __init__(self, config: NotificationConfig):
+        self.config = config
+        self.logger = structlog.get_logger("notifications")
+
+    async def send_notification(
+        self,
+        level: NotificationLevel,
+        title: str,
+        message: str,
+        context: Dict[str, Any] = None
+    ) -> bool:
+        """Send a notification if conditions are met."""
+
+        if not self.config.enabled or not self.config.webhook_url:
+            return False
+
+        # Check if level meets minimum threshold
+        level_order = {
+            NotificationLevel.INFO: 0,
+            NotificationLevel.WARNING: 1,
+            NotificationLevel.ERROR: 2,
+            NotificationLevel.CRITICAL: 3
+        }
+
+        if level_order[level] < level_order[self.config.min_level]:
+            return False
+
+        payload = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "level": level.value,
+            "title": title,
+            "message": message,
+            "system": "agentic-drop-zone",
+            "context": context or {}
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=self.config.timeout) as client:
+                response = await client.post(
+                    self.config.webhook_url,
+                    json=payload,
+                    headers={"Content-Type": "application/json"}
+                )
+                response.raise_for_status()
+
+                self.logger.info(
+                    "Notification sent successfully",
+                    level=level.value,
+                    title=title,
+                    status_code=response.status_code
+                )
+                return True
+
+        except Exception as e:
+            self.logger.error(
+                "Failed to send notification",
+                level=level.value,
+                title=title,
+                error=str(e)
+            )
+            return False
+
+
+# ===========================
+# WORKFLOW MONITORING SYSTEM
+# ===========================
+
+class WorkflowStatus(str, Enum):
+    """Workflow execution status."""
+    PENDING = "pending"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    TIMEOUT = "timeout"
+
+
+class WorkflowMetrics(BaseModel):
+    """Metrics for workflow execution."""
+    workflow_id: str
+    zone_name: str
+    file_path: str
+    agent: str
+    model: str
+    status: WorkflowStatus
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    duration_seconds: Optional[float] = None
+    error_message: Optional[str] = None
+
+
+class WorkflowMonitor:
+    """Monitor and track workflow execution."""
+
+    def __init__(self, notification_service: NotificationService):
+        self.active_workflows: Dict[str, WorkflowMetrics] = {}
+        self.completed_workflows: List[WorkflowMetrics] = []
+        self.notification_service = notification_service
+        self.logger = structlog.get_logger("workflow_monitor")
+        self.timeout_seconds = 300  # 5 minutes default timeout
+
+    def start_workflow(
+        self,
+        workflow_id: str,
+        zone_name: str,
+        file_path: str,
+        agent: str,
+        model: str
+    ) -> WorkflowMetrics:
+        """Start tracking a new workflow."""
+
+        metrics = WorkflowMetrics(
+            workflow_id=workflow_id,
+            zone_name=zone_name,
+            file_path=file_path,
+            agent=agent,
+            model=model,
+            status=WorkflowStatus.RUNNING,
+            start_time=datetime.now(timezone.utc)
+        )
+
+        self.active_workflows[workflow_id] = metrics
+
+        self.logger.info(
+            "Workflow started",
+            workflow_id=workflow_id,
+            zone_name=zone_name,
+            file_path=file_path,
+            agent=agent,
+            model=model
+        )
+
+        return metrics
+
+    async def complete_workflow(
+        self,
+        workflow_id: str,
+        status: WorkflowStatus,
+        error_message: Optional[str] = None
+    ) -> Optional[WorkflowMetrics]:
+        """Mark a workflow as completed."""
+
+        if workflow_id not in self.active_workflows:
+            self.logger.warning("Attempted to complete unknown workflow", workflow_id=workflow_id)
+            return None
+
+        metrics = self.active_workflows.pop(workflow_id)
+        metrics.end_time = datetime.now(timezone.utc)
+        metrics.duration_seconds = (metrics.end_time - metrics.start_time).total_seconds()
+        metrics.status = status
+        metrics.error_message = error_message
+
+        self.completed_workflows.append(metrics)
+
+        # Send notifications for failures
+        if status == WorkflowStatus.FAILED:
+            await self.notification_service.send_notification(
+                NotificationLevel.ERROR,
+                f"Workflow Failed: {metrics.zone_name}",
+                f"File: {Path(metrics.file_path).name}\nAgent: {metrics.agent}\nError: {error_message}",
+                context=metrics.dict()
+            )
+        elif status == WorkflowStatus.TIMEOUT:
+            await self.notification_service.send_notification(
+                NotificationLevel.CRITICAL,
+                f"Workflow Timeout: {metrics.zone_name}",
+                f"File: {Path(metrics.file_path).name}\nAgent: {metrics.agent}\nDuration: {metrics.duration_seconds:.1f}s",
+                context=metrics.dict()
+            )
+
+        self.logger.info(
+            "Workflow completed",
+            workflow_id=workflow_id,
+            status=status.value,
+            duration_seconds=metrics.duration_seconds,
+            error_message=error_message
+        )
+
+        return metrics
+
+    async def check_timeouts(self) -> List[str]:
+        """Check for timed out workflows and mark them as such."""
+        timed_out = []
+        current_time = datetime.now(timezone.utc)
+
+        for workflow_id, metrics in list(self.active_workflows.items()):
+            duration = (current_time - metrics.start_time).total_seconds()
+            if duration > self.timeout_seconds:
+                await self.complete_workflow(workflow_id, WorkflowStatus.TIMEOUT)
+                timed_out.append(workflow_id)
+
+        return timed_out
+
+    def get_active_count(self) -> int:
+        """Get number of active workflows."""
+        return len(self.active_workflows)
+
+    def get_health_status(self) -> Dict[str, Any]:
+        """Get health status of the monitoring system."""
+        return {
+            "active_workflows": len(self.active_workflows),
+            "completed_workflows": len(self.completed_workflows),
+            "oldest_active_workflow": (
+                min(self.active_workflows.values(), key=lambda w: w.start_time).start_time.isoformat()
+                if self.active_workflows else None
+            ),
+            "system_status": "healthy"
+        }
+
+
+# Initialize global instances
+logger = setup_structured_logging()
+notification_config = NotificationConfig(
+    webhook_url=os.getenv("NOTIFICATION_WEBHOOK_URL"),
+    min_level=NotificationLevel(os.getenv("NOTIFICATION_MIN_LEVEL", "error"))
+)
+notification_service = NotificationService(notification_config)
+workflow_monitor = WorkflowMonitor(notification_service)
 
 
 # Environment variable checks
@@ -447,7 +753,23 @@ class Agents:
 
     @staticmethod
     async def process_with_agent(agent: AgentType, args: PromptArgs) -> None:
-        """Route to appropriate agent based on type."""
+        """Route to appropriate agent based on type with enhanced monitoring."""
+        import uuid
+
+        # Generate unique workflow ID
+        workflow_id = str(uuid.uuid4())[:8]
+
+        # Start workflow monitoring
+        workflow_monitor.start_workflow(
+            workflow_id=workflow_id,
+            zone_name=args.zone_name or "unknown",
+            file_path=args.file_path,
+            agent=agent.value,
+            model=args.model or "default"
+        )
+
+        logger.info(f"Starting agent processing [ID: {workflow_id}]: {args.file_path} with {agent.value} ({args.model}) in {args.zone_name}")
+
         try:
             if agent == AgentType.CLAUDE_CODE:
                 await Agents.prompt_claude_code(args)
@@ -457,8 +779,38 @@ class Agents:
                 await Agents.prompt_codex_cli(args)
             else:
                 raise ValueError(f"Unknown agent type: {agent}")
+
+            # Mark workflow as completed successfully
+            await workflow_monitor.complete_workflow(workflow_id, WorkflowStatus.COMPLETED)
+
+            logger.info(f"Agent processing completed successfully [ID: {workflow_id}]: {args.file_path}")
+
         except Exception as e:
+            error_msg = str(e)
+
+            # Mark workflow as failed
+            await workflow_monitor.complete_workflow(
+                workflow_id,
+                WorkflowStatus.FAILED,
+                error_message=error_msg
+            )
+
+            logger.error(f"Agent processing failed [ID: {workflow_id}]: {args.file_path} with {agent.value}: {error_msg}", exc_info=True)
+
             console.print(f"[bold red]❌ Agent processing failed: {e}[/bold red]")
+
+            # Send error notification
+            await notification_service.send_notification(
+                NotificationLevel.ERROR,
+                f"Agent Processing Failed: {args.zone_name}",
+                f"File: {Path(args.file_path).name}\nAgent: {agent.value}\nError: {error_msg}",
+                context={
+                    "workflow_id": workflow_id,
+                    "agent": agent.value,
+                    "file_path": args.file_path,
+                    "zone_name": args.zone_name
+                }
+            )
 
 
 class DropZoneHandler(FileSystemEventHandler):
@@ -507,13 +859,17 @@ class DropZoneHandler(FileSystemEventHandler):
             )
 
     def process_file(self, file_path: str) -> None:
-        """Process a file that has been added or modified."""
+        """Process a file that has been added or modified with enhanced logging."""
         path = Path(file_path)
 
         # Check if file matches any of the configured patterns
         if not any(path.match(pattern) for pattern in self.drop_zone.file_patterns):
-            # Silent return - no need to log non-matching files
+            logger.debug(f"File ignored - pattern mismatch: {file_path} in {self.drop_zone.name}")
             return
+
+        # Log file processing start
+        file_size = path.stat().st_size if path.exists() else None
+        logger.info(f"File processing started: {file_path} in {self.drop_zone.name} (agent: {self.drop_zone.agent.value}, size: {file_size} bytes)")
 
         zone_color = self.drop_zone.color or "green"
         console.print(
@@ -537,8 +893,15 @@ class DropZoneHandler(FileSystemEventHandler):
             zone_color=self.drop_zone.color,
         )
 
-        # Run the agent in a new event loop since watchdog runs in a different thread
-        asyncio.run(Agents.process_with_agent(self.drop_zone.agent, prompt_args))
+        try:
+            # Run the agent in a new event loop since watchdog runs in a different thread
+            asyncio.run(Agents.process_with_agent(self.drop_zone.agent, prompt_args))
+
+            logger.info(f"File processing delegated to agent: {file_path} in {self.drop_zone.name}")
+
+        except Exception as e:
+            logger.error(f"File processing failed in handler: {file_path} in {self.drop_zone.name}: {e}", exc_info=True)
+            console.print(f"[bold red]❌ File processing failed: {e}[/bold red]")
 
 
 class AgenticDropZone:
@@ -691,17 +1054,154 @@ class AgenticDropZone:
         console.print(f"[yellow]🛑 Stopped {len(self.observers)} observer(s)[/yellow]")
         self.observers.clear()
 
+    async def _timeout_monitor_task(self) -> None:
+        """Background task to monitor workflow timeouts."""
+        while True:
+            try:
+                timed_out = await workflow_monitor.check_timeouts()
+                if timed_out:
+                    logger.warning(
+                        "Workflows timed out",
+                        timed_out_count=len(timed_out),
+                        workflow_ids=timed_out
+                    )
+
+                # Check every 30 seconds
+                await asyncio.sleep(30)
+            except Exception as e:
+                logger.error("Timeout monitor task failed", error=str(e), exc_info=True)
+                await asyncio.sleep(30)
+
     async def run(self) -> None:
-        """Run the drop zone monitor."""
+        """Run the drop zone monitor with enhanced monitoring."""
         self.load_config()
         self.start()
+
+        # Start background tasks
+        timeout_task = asyncio.create_task(self._timeout_monitor_task())
+        health_server_task = asyncio.create_task(self._start_health_server())
+
         try:
+            logger.info("Agentic Drop Zone started successfully")
+
+            # Send startup notification
+            await notification_service.send_notification(
+                NotificationLevel.INFO,
+                "Agentic Drop Zone Started",
+                f"Monitoring {len(self.config.drop_zones)} drop zones",
+                context={
+                    "drop_zones": [zone.name for zone in self.config.drop_zones],
+                    "active_workflows": workflow_monitor.get_active_count()
+                }
+            )
+
             while True:
                 await asyncio.sleep(1)
         except KeyboardInterrupt:
             console.print("\n[yellow]⚡ Received interrupt signal[/yellow]")
+            logger.info("Shutdown signal received")
         finally:
+            # Cancel background tasks
+            timeout_task.cancel()
+            health_server_task.cancel()
+
+            # Wait for tasks to complete
+            await asyncio.gather(timeout_task, health_server_task, return_exceptions=True)
+
             self.stop()
+            logger.info("Agentic Drop Zone stopped")
+
+    async def _start_health_server(self) -> None:
+        """Start the health check HTTP server."""
+        try:
+            from fastapi import FastAPI
+            import uvicorn
+
+            app = FastAPI(
+                title="Agentic Drop Zone Health",
+                description="Health monitoring for Agentic Drop Zone system",
+                version="1.0.0"
+            )
+
+            @app.get("/health")
+            async def health_check():
+                """Basic health check endpoint."""
+                return {
+                    "status": "healthy",
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "system": "agentic-drop-zone"
+                }
+
+            @app.get("/health/detailed")
+            async def detailed_health():
+                """Detailed health check with workflow metrics."""
+                health_data = workflow_monitor.get_health_status()
+                health_data.update({
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "drop_zones": len(self.config.drop_zones) if self.config else 0,
+                    "notification_config": {
+                        "enabled": notification_config.enabled,
+                        "webhook_configured": bool(notification_config.webhook_url),
+                        "min_level": notification_config.min_level.value
+                    }
+                })
+                return health_data
+
+            @app.get("/workflows/active")
+            async def active_workflows():
+                """Get currently active workflows."""
+                return {
+                    "active_workflows": [
+                        {
+                            "workflow_id": wf_id,
+                            "zone_name": wf.zone_name,
+                            "file_path": wf.file_path,
+                            "agent": wf.agent,
+                            "start_time": wf.start_time.isoformat(),
+                            "duration_seconds": (datetime.now(timezone.utc) - wf.start_time).total_seconds()
+                        }
+                        for wf_id, wf in workflow_monitor.active_workflows.items()
+                    ]
+                }
+
+            @app.get("/workflows/recent")
+            async def recent_workflows():
+                """Get recent completed workflows."""
+                recent = workflow_monitor.completed_workflows[-10:]  # Last 10
+                return {
+                    "recent_workflows": [
+                        {
+                            "workflow_id": wf.workflow_id,
+                            "zone_name": wf.zone_name,
+                            "file_path": wf.file_path,
+                            "agent": wf.agent,
+                            "status": wf.status.value,
+                            "duration_seconds": wf.duration_seconds,
+                            "end_time": wf.end_time.isoformat() if wf.end_time else None
+                        }
+                        for wf in recent
+                    ]
+                }
+
+            # Start the server on a separate port
+            health_host = os.getenv("HEALTH_SERVER_HOST", "127.0.0.1")
+            health_port = int(os.getenv("HEALTH_SERVER_PORT", "8080"))
+
+            config = uvicorn.Config(
+                app=app,
+                host=health_host,
+                port=health_port,
+                log_level="warning"  # Reduce uvicorn noise
+            )
+            server = uvicorn.Server(config)
+
+            logger.info(f"Starting health check server on http://{health_host}:{health_port}")
+            console.print(f"[dim]💚 Health check server: http://{health_host}:{health_port}/health[/dim]")
+
+            await server.serve()
+
+        except Exception as e:
+            logger.error("Failed to start health server", error=str(e), exc_info=True)
 
 
 async def main():
