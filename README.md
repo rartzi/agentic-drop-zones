@@ -42,27 +42,52 @@ graph LR
 
 ## Quick Start
 
+### 1. **Install Prerequisites**
 ```bash
-# Install uv (if not already installed)
+# Install uv (Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Setup environment variables for AWS Bedrock (recommended)
+# Install Claude Code CLI (for agent workflows)
+npm install -g @anthropics/claude-code
+
+# Install OpenAI Whisper (for morning debrief audio transcription)
+uv tool install openai-whisper
+```
+
+### 2. **Setup Environment**
+```bash
+# Copy and configure environment variables
+cp .env.sample .env
+# Edit .env with your credentials
+
+# AWS Bedrock Configuration (recommended)
 export CLAUDE_CODE_USE_BEDROCK=1
 export AWS_BEARER_TOKEN_BEDROCK="your-api-key"
 export AWS_REGION="your-aws-region"
-export CLAUDE_CODE_PATH="claude" # default to claude, may need to run which claude to find the path
 
-# OR for direct Anthropic API:
+# OR Direct Anthropic API:
 # export ANTHROPIC_API_KEY="your-claude-api-key"
+```
 
-# Start with clean startup script (recommended)
+### 3. **Start the System**
+```bash
+# Recommended: Use process management scripts
 ./start.sh
 
-# OR run directly with uv
+# Alternative: Direct execution
 uv run sfs_agentic_drop_zone.py
+```
 
-# Drag and drop (copy to reuse) files from example_input_files folder into the drop zone directories
+### 4. **Test Workflows**
+```bash
+# Test echo workflow
 cp example_input_files/echo.txt agentic_drop_zone/echo_zone/
+
+# Test morning debrief (audio transcription)
+cp example_input_files/*.mp4 agentic_drop_zone/morning_debrief_zone/
+
+# Test training data generation
+cp example_input_files/*.csv agentic_drop_zone/training_data_zone/
 ```
 
 ## 🚀 Process Management (Recommended)

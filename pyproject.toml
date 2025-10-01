@@ -1,8 +1,24 @@
 [project]
 name = "agentic-drop-zones"
 version = "0.1.0"
-description = "Add your description here"
+description = "Automated file processing system that monitors directories and triggers AI agents when files are dropped"
 requires-python = ">=3.12"
 dependencies = [
-    "google-cloud-aiplatform>=1.118.0",
+    # Core dependencies
+    "claude-code-sdk",
+    "watchdog",
+    "pyyaml",
+    "rich",
+    "pydantic>=2.0",
+    "structlog",
+    "httpx",
+    "python-dotenv",
+
+    # Health server dependencies
+    "fastapi",
+    "uvicorn",
+
+    # Optional workflow dependencies
+    "google-cloud-aiplatform>=1.118.0",  # For Google image generation workflows
+    # "openai-whisper",  # Install via: uv tool install openai-whisper
 ]

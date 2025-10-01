@@ -1,0 +1,23 @@
+# Core dependencies for Agentic Drop Zone system
+# Install with: pip install -r requirements.txt
+
+# Main dependencies
+claude-code-sdk
+watchdog
+pyyaml
+rich
+pydantic>=2.0
+structlog
+httpx
+python-dotenv
+
+# Health server dependencies
+fastapi
+uvicorn
+
+# Optional workflow dependencies
+google-cloud-aiplatform>=1.118.0
+
+# Note: OpenAI Whisper should be installed separately:
+# pip install openai-whisper
+# or with uv: uv tool install openai-whisper
