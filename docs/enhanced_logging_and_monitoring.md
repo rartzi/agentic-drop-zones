@@ -127,6 +127,47 @@ curl http://localhost:8080/workflows/recent
 
 ## 🚀 Usage Examples
 
+### Production Deployment with Process Management
+
+#### Recommended Startup Method
+```bash
+# Start with full process management
+./start.sh
+
+# The startup script automatically:
+# - Checks port availability (8080/8081)
+# - Prevents duplicate instances
+# - Creates PID file for tracking
+# - Provides colored status output
+# - Sets up signal handlers for cleanup
+```
+
+#### Health Monitoring
+```bash
+# Check if system is running
+./start.sh status
+
+# Monitor health endpoints
+curl http://localhost:8080/health/detailed
+
+# Check active workflows
+curl http://localhost:8080/workflows/active
+```
+
+#### Graceful Shutdown
+```bash
+# Clean shutdown with process cleanup
+./stop.sh
+
+# The stop script automatically:
+# - Sends SIGTERM for graceful shutdown
+# - Waits for process termination
+# - Force kills if needed (SIGKILL)
+# - Cleans up PID files
+# - Frees all ports (8080/8081)
+# - Removes any remaining processes
+```
+
 ### Setting Up Slack Notifications
 
 1. **Create Slack Webhook**

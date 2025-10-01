@@ -55,11 +55,49 @@ export CLAUDE_CODE_PATH="claude" # default to claude, may need to run which clau
 # OR for direct Anthropic API:
 # export ANTHROPIC_API_KEY="your-claude-api-key"
 
-# Run with uv
+# Start with clean startup script (recommended)
+./start.sh
+
+# OR run directly with uv
 uv run sfs_agentic_drop_zone.py
 
 # Drag and drop (copy to reuse) files from example_input_files folder into the drop zone directories
 cp example_input_files/echo.txt agentic_drop_zone/echo_zone/
+```
+
+## 🚀 Process Management (Recommended)
+
+The system includes robust startup/shutdown scripts for production use:
+
+### **Startup Commands**
+```bash
+./start.sh          # Clean startup with port checking
+./start.sh status   # Check if system is running
+./start.sh help     # Show all available commands
+
+# Custom port usage
+HEALTH_SERVER_PORT=8081 ./start.sh
+```
+
+### **Shutdown Commands**
+```bash
+./stop.sh           # Graceful shutdown with cleanup
+./start.sh stop     # Alternative stop method
+./start.sh restart  # Restart the system
+```
+
+### **Features**
+- ✅ **Port Conflict Detection** - Automatically detects and resolves port conflicts
+- ✅ **Process Management** - Prevents duplicate instances with PID file tracking
+- ✅ **Graceful Shutdown** - Proper signal handling (SIGTERM → SIGKILL)
+- ✅ **Complete Cleanup** - Removes all processes, PID files, and frees ports
+- ✅ **Status Monitoring** - Check system health and process status
+- ✅ **Error Recovery** - Automatic cleanup of stale processes and files
+
+### **Environment Variables**
+```bash
+HEALTH_SERVER_PORT=8080    # Health server port (default: 8080)
+HEALTH_SERVER_HOST=0.0.0.0 # Health server host (default: 127.0.0.1)
 ```
 
 ## MCP Support
@@ -219,14 +257,21 @@ The system comes with several pre-configured workflows. Each requires specific s
 ```
 agentic-drop-zones/
 ├── sfs_agentic_drop_zone.py     # Main application
+├── start.sh                     # Clean startup script (recommended)
+├── stop.sh                      # Graceful shutdown script
 ├── drops.yaml                   # Configuration
 ├── tools/                       # External tools and scripts
 │   └── vertex_ai_image_generator.py # Google Cloud image generation tool
 ├── .claude/commands/            # Prompt templates (5 active workflows)
 ├── agentic_drop_zone/           # Drop directories (auto-created)
 ├── example_input_files/         # Sample files for testing
+├── logs/                        # Application logs (auto-created)
+│   ├── agentic_drop_zone.log   # Main application events
+│   ├── errors.log              # Error and critical issues
+│   └── workflows.log           # Detailed workflow processing
 ├── docs/                        # All documentation
 │   ├── CLAUDE.md               # Instructions for future Claude instances
+│   ├── enhanced_logging_and_monitoring.md # Logging & monitoring guide
 │   ├── agentic_drop_zone_flow_diagram.md  # System flow diagrams
 │   └── *.md                    # Technical docs and references
 ├── .env.sample                  # Environment configuration template

@@ -45,7 +45,34 @@ The system includes enhanced logging, error handling, and monitoring capabilitie
 
 ## Development Commands
 
-### Running the Application
+### Production Process Management (Recommended)
+
+#### Clean Startup/Shutdown Scripts
+```bash
+# Start with full process management
+./start.sh
+
+# Stop gracefully with cleanup
+./stop.sh
+
+# Check status
+./start.sh status
+
+# Restart system
+./start.sh restart
+
+# Show help
+./start.sh help
+```
+
+#### Features:
+- **Port conflict detection** - Automatically checks and frees ports 8080/8081
+- **PID file management** - Prevents duplicate instances
+- **Graceful shutdown** - Proper signal handling (SIGTERM → SIGKILL)
+- **Process cleanup** - Removes all related processes and files
+- **Environment variable support** - Configurable host/port
+
+### Running the Application (Alternative Methods)
 
 #### With AWS Bedrock:
 ```bash
@@ -54,6 +81,9 @@ uv run sfs_agentic_drop_zone.py
 
 # Or with inline environment variables
 CLAUDE_CODE_USE_BEDROCK=1 AWS_BEARER_TOKEN_BEDROCK="your-key" AWS_REGION="us-east-1" uv run sfs_agentic_drop_zone.py
+
+# With custom health server port
+HEALTH_SERVER_PORT=8081 uv run sfs_agentic_drop_zone.py
 ```
 
 #### With Direct Anthropic API:
