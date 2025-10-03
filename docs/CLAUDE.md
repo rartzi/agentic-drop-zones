@@ -97,6 +97,30 @@ ANTHROPIC_API_KEY="your-key" uv run sfs_agentic_drop_zone.py
 
 ### Environment Setup
 
+#### ⚠️ Important: Google Cloud Credentials Path Configuration
+
+**For Google Cloud image generation workflows, the credential path configuration is critical:**
+
+- **When using `./start.sh`** (recommended): Use **relative paths** like `./service-account-key.json`
+  - The startup script runs from the project root directory
+  - Relative paths resolve correctly from this working directory
+
+- **When using `uv run` directly**: Use **absolute paths** like `/full/path/to/service-account-key.json`
+  - Direct execution may have different working directory context
+  - Absolute paths ensure reliable credential file access
+
+**Example configurations:**
+
+```bash
+# For ./start.sh (relative path - recommended)
+GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json
+
+# For direct uv run (absolute path)
+GOOGLE_APPLICATION_CREDENTIALS=/Users/username/project/service-account-key.json
+```
+
+**Troubleshooting:** If you get Google Cloud authentication errors, verify the credential file path is correct for your execution method.
+
 #### Option 1: AWS Bedrock (Recommended for Enterprise)
 ```bash
 # Copy sample environment file
